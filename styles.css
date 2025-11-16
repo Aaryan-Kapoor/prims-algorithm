@@ -1,0 +1,73 @@
+:root {
+    font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+body {
+    background-image: radial-gradient(circle at top, rgba(16, 185, 129, 0.08), transparent 35%),
+                      radial-gradient(circle at bottom, rgba(14, 165, 233, 0.08), transparent 45%);
+}
+.panel {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 15px 45px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.05);
+}
+.panel-header {
+    margin-bottom: 1.5rem;
+}
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    font-size: 0.7rem;
+    color: #2563eb;
+    font-weight: 700;
+}
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.agenda-card,
+.concept-card,
+.step-note,
+.code-card,
+.wrap-card {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.agenda-card h3 {
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+.step-note h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+.code-card pre {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 16px;
+    padding: 1rem;
+    overflow-x: auto;
+}
+.interactive-wrapper .panel {
+    border-radius: 16px;
+    box-shadow: none;
+}
+.btn {
+    border-radius: 9999px;
+}
+canvas {
+    max-width: 100%;
+    border-radius: 1rem;
+    border: 2px solid #0f172a;
+}
+@media (max-width: 640px) {
+    .panel {
+        padding: 1.75rem;
+    }
+}
