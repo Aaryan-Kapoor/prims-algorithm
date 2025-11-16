@@ -33,6 +33,17 @@ body {
     transition: background 0.2s ease, color 0.2s ease;
 }
 
+main {
+    width: 100%;
+    max-width: 1400px;
+}
+
+@media (min-width: 1600px) {
+    main {
+        max-width: 1600px;
+    }
+}
+
 body.dark-mode {
     --body-bg: #020202;
     --panel-bg: #0b0b0b;

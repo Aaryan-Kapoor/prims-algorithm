@@ -95,91 +95,90 @@
                 <p class="hint">In view mode you can drag nodes to rearrange layouts and double-click any node to rename it. Add edge mode now uses an inline prompt for weights.</p>
             </div>
 
-            <div class="panel pseudocode-panel">
-                <div class="panel-header">
-                    <div>
-                        <p class="eyebrow">Trace</p>
-                        <h2 class="section-title">Prim's Pseudocode</h2>
+            <div class="flex flex-col gap-6">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <p class="eyebrow">Cockpit</p>
+                            <h2 class="section-title">Algorithm Controls</h2>
+                        </div>
+                    </div>
+                    <label class="field">
+                        <span class="field-label">Start node</span>
+                        <select id="startNodeSelect" class="select"></select>
+                        <span class="hint">Pick any node before starting. You can change this and rerun instantly.</span>
+                    </label>
+                    <div class="control-row">
+                        <button id="startBtn" class="btn flex-1">Start Prim's</button>
+                        <button id="stepBtn" class="btn flex-1" disabled>Next step</button>
+                    </div>
+                    <div class="control-row">
+                        <button id="autoBtn" class="btn flex-1" disabled>Auto run</button>
+                        <button id="resetBtn" class="btn flex-1 btn-ghost">Reset</button>
+                    </div>
+                    <div class="speed-control">
+                        <label for="speedSlider" class="field-label">Animation speed</label>
+                        <input type="range" id="speedSlider" min="20" max="2000" value="600">
+                        <p id="speedLabel" class="hint">600ms</p>
+                    </div>
+                    <div class="stat-stack">
+                        <div>
+                            <p class="stat-label">Current step</p>
+                            <p id="stepExplanation" class="stat-value">Click "Start Prim's" to begin visualization.</p>
+                        </div>
+                        <div>
+                            <p class="stat-label">MST snapshot</p>
+                            <p id="mstStats" class="stat-value">Total Weight: 0 | Edges: 0 | Nodes in MST: 0/0</p>
+                        </div>
+                        <div>
+                            <p class="stat-label">Graph health</p>
+                            <p id="healthIndicator" class="stat-value">No nodes yet.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="pseudocode">
-                    <div class="code-block">
-                        <div class="code-line" data-step="0">1. Initialize MST as empty</div>
-                        <div class="code-line" data-step="1">2. Select starting node</div>
-                        <div class="code-line" data-step="2">3. Add starting node to MST</div>
-                        <div class="code-line" data-step="3">4. WHILE MST has fewer than N nodes:</div>
-                        <div class="code-line" data-step="4">&nbsp;&nbsp;&nbsp;5. Find minimum edge (u,v,w)</div>
-                        <div class="code-line" data-step="5">&nbsp;&nbsp;&nbsp;6. WHERE u is in MST</div>
-                        <div class="code-line" data-step="6">&nbsp;&nbsp;&nbsp;7. AND v is NOT in MST</div>
-                        <div class="code-line" data-step="7">&nbsp;&nbsp;&nbsp;8. Add v to MST</div>
-                        <div class="code-line" data-step="8">&nbsp;&nbsp;&nbsp;9. Add edge (u,v) to MST</div>
-                        <div class="code-line" data-step="9">&nbsp;&nbsp;&nbsp;10. Update total weight</div>
-                        <div class="code-line" data-step="10">11. END WHILE</div>
-                        <div class="code-line" data-step="11">12. MST is complete!</div>
+                <div class="panel pseudocode-panel">
+                    <div class="panel-header">
+                        <div>
+                            <p class="eyebrow">Trace</p>
+                            <h2 class="section-title">Prim's Pseudocode</h2>
+                        </div>
+                    </div>
+                    <div class="pseudocode">
+                        <div class="code-block">
+                            <div class="code-line" data-step="0">1. Initialize MST as empty</div>
+                            <div class="code-line" data-step="1">2. Select starting node</div>
+                            <div class="code-line" data-step="2">3. Add starting node to MST</div>
+                            <div class="code-line" data-step="3">4. WHILE MST has fewer than N nodes:</div>
+                            <div class="code-line" data-step="4">&nbsp;&nbsp;&nbsp;5. Find minimum edge (u,v,w)</div>
+                            <div class="code-line" data-step="5">&nbsp;&nbsp;&nbsp;6. WHERE u is in MST</div>
+                            <div class="code-line" data-step="6">&nbsp;&nbsp;&nbsp;7. AND v is NOT in MST</div>
+                            <div class="code-line" data-step="7">&nbsp;&nbsp;&nbsp;8. Add v to MST</div>
+                            <div class="code-line" data-step="8">&nbsp;&nbsp;&nbsp;9. Add edge (u,v) to MST</div>
+                            <div class="code-line" data-step="9">&nbsp;&nbsp;&nbsp;10. Update total weight</div>
+                            <div class="code-line" data-step="10">11. END WHILE</div>
+                            <div class="code-line" data-step="11">12. MST is complete!</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="grid gap-6 lg:grid-cols-2 items-start">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <p class="eyebrow">Cockpit</p>
-                        <h2 class="section-title">Algorithm Controls</h2>
-                    </div>
-                </div>
-                <label class="field">
-                    <span class="field-label">Start node</span>
-                    <select id="startNodeSelect" class="select"></select>
-                    <span class="hint">Pick any node before starting. You can change this and rerun instantly.</span>
-                </label>
-                <div class="control-row">
-                    <button id="startBtn" class="btn flex-1">Start Prim's</button>
-                    <button id="stepBtn" class="btn flex-1" disabled>Next step</button>
-                </div>
-                <div class="control-row">
-                    <button id="autoBtn" class="btn flex-1" disabled>Auto run</button>
-                    <button id="resetBtn" class="btn flex-1 btn-ghost">Reset</button>
-                </div>
-                <div class="speed-control">
-                    <label for="speedSlider" class="field-label">Animation speed</label>
-                    <input type="range" id="speedSlider" min="20" max="2000" value="600">
-                    <p id="speedLabel" class="hint">600ms</p>
-                </div>
-                <div class="stat-stack">
-                    <div>
-                        <p class="stat-label">Current step</p>
-                        <p id="stepExplanation" class="stat-value">Click "Start Prim's" to begin visualization.</p>
-                    </div>
-                    <div>
-                        <p class="stat-label">MST snapshot</p>
-                        <p id="mstStats" class="stat-value">Total Weight: 0 | Edges: 0 | Nodes in MST: 0/0</p>
-                    </div>
-                    <div>
-                        <p class="stat-label">Graph health</p>
-                        <p id="healthIndicator" class="stat-value">No nodes yet.</p>
-                    </div>
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <p class="eyebrow">Legend &amp; Modes</p>
+                    <h2 class="section-title">Visual cues</h2>
                 </div>
             </div>
-
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <p class="eyebrow">Legend &amp; Modes</p>
-                        <h2 class="section-title">Visual cues</h2>
-                    </div>
-                </div>
-                <div class="legend-grid">
-                    <div class="legend-item"><span class="legend-dot regular"></span>Regular node</div>
-                    <div class="legend-item"><span class="legend-dot mst"></span>Node in MST</div>
-                    <div class="legend-item"><span class="legend-dot current"></span>Current frontier node</div>
-                    <div class="legend-item"><span class="legend-edge regular"></span>Regular edge</div>
-                    <div class="legend-item"><span class="legend-edge candidate"></span>Candidate edge</div>
-                    <div class="legend-item"><span class="legend-edge mst"></span>Edge committed to MST</div>
-                </div>
-                <p class="hint mt-4">Delete mode removes a node and all connected edges. Use undo-friendly export/import to preserve interesting states.</p>
+            <div class="legend-grid">
+                <div class="legend-item"><span class="legend-dot regular"></span>Regular node</div>
+                <div class="legend-item"><span class="legend-dot mst"></span>Node in MST</div>
+                <div class="legend-item"><span class="legend-dot current"></span>Current frontier node</div>
+                <div class="legend-item"><span class="legend-edge regular"></span>Regular edge</div>
+                <div class="legend-item"><span class="legend-edge candidate"></span>Candidate edge</div>
+                <div class="legend-item"><span class="legend-edge mst"></span>Edge committed to MST</div>
             </div>
+            <p class="hint mt-4">Delete mode removes a node and all connected edges. Use undo-friendly export/import to preserve interesting states.</p>
         </section>
 
         <section class="panel">
