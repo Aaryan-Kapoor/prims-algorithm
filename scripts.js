@@ -424,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('stepBtn').disabled = false;
         document.getElementById('autoBtn').disabled = false;
         document.getElementById('startBtn').disabled = true;
-        setStatus(`Prim\'s initialized from node ${configuredStartNode.label}. Step through or auto run.`);
+        setStatus(`Prim\'s initialized from node ${configuredStartNode.label}. Step through or auto run.`, { showInWorkspace: false });
         previewNextStep('Next: choose the starting node to seed the MST.');
         draw();
     }
@@ -724,9 +724,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setStatus(text) {
-        if (statusText) {
-            statusText.textContent = text;
-        }
         if (heroStatus) {
             heroStatus.textContent = text;
         }

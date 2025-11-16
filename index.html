@@ -86,12 +86,18 @@
                             <div class="canvas-stack">
                                 <canvas id="canvas" width="760" height="520" class="canvas"></canvas>
                                 <div class="status-row">
-                                    <div class="status-bar stack">
-                                        <p id="statusText" class="status-line primary">Welcome! Build a graph or load the curated sample.</p>
-                                        <div id="workspaceNarration" class="workspace-narration">
-                                            <p class="status-line faint" data-role="prev">Previous step will appear here.</p>
-                                            <p class="status-line focus" data-role="current">Awaiting instructions...</p>
-                                            <p class="status-line faint" data-role="next">Next hint shows up here.</p>
+                                    <div id="workspaceNarration" class="workspace-narration">
+                                        <div class="narration-line small">
+                                            <span class="narration-label">Prev</span>
+                                            <span class="narration-text" data-role="prev">Previous step will appear here.</span>
+                                        </div>
+                                        <div class="narration-line focus">
+                                            <span class="narration-label">Current</span>
+                                            <span class="narration-text" data-role="current">Awaiting instructions...</span>
+                                        </div>
+                                        <div class="narration-line small">
+                                            <span class="narration-label">Next</span>
+                                            <span class="narration-text" data-role="next">Next hint shows up here.</span>
                                         </div>
                                     </div>
                                     <button id="mstViewToggle" class="btn btn-ghost hidden" disabled>Show MST only</button>
