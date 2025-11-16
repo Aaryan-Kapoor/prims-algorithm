@@ -33,14 +33,14 @@ body {
     transition: background 0.2s ease, color 0.2s ease;
 }
 
-main {
+main.max-w-7xl {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1500px;
 }
 
-@media (min-width: 1600px) {
-    main {
-        max-width: 1600px;
+@media (min-width: 1750px) {
+    main.max-w-7xl {
+        max-width: 1700px;
     }
 }
 
@@ -222,12 +222,49 @@ body.dark-mode {
 .status-bar {
     background: var(--status-bg);
     border-radius: 0.85rem;
-    padding: 0.9rem 1rem;
-    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.93rem;
     color: var(--status-text);
     flex: 1;
 }
 
+.status-bar.stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.status-line {
+    margin: 0;
+}
+
+.status-line.primary {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.workspace-narration {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    overflow: hidden;
+    max-height: 4.5rem;
+}
+
+.workspace-narration .status-line {
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted-text);
+    opacity: 0.65;
+}
+
+.workspace-narration .status-line.focus {
+    font-size: 0.82rem;
+    font-weight: 700;
+    opacity: 1;
+    color: var(--text-color);
+}
 .hidden {
     display: none !important;
 }
@@ -236,7 +273,92 @@ body.dark-mode {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 0.75rem;
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
+}
+
+.button-grid.small {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+}
+
+.workspace-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.pseudocode-panel {
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+    .workspace-grid {
+        grid-template-columns: minmax(0, 2fr) minmax(360px, 1fr);
+    }
+}
+
+@media (min-width: 1280px) {
+    .workspace-grid {
+        grid-template-columns: minmax(0, 2.2fr) minmax(420px, 1fr);
+    }
+}
+
+@media (min-width: 1536px) {
+    .workspace-grid {
+        grid-template-columns: minmax(0, 2.4fr) minmax(480px, 1fr);
+    }
+}
+
+.workspace-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.workspace-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.canvas-stack {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+}
+
+.cockpit-card {
+    background: var(--utility-bg);
+    border: 1px dashed var(--panel-border);
+    border-radius: 18px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.mini-title {
+    margin: 0.15rem 0 0;
+    font-size: 1.1rem;
+}
+
+@media (min-width: 1200px) {
+    .workspace-shell {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .cockpit-card {
+        width: 280px;
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 1199px) {
+    .cockpit-card {
+        width: 100%;
+    }
 }
 
 .btn {
@@ -244,7 +366,8 @@ body.dark-mode {
     border-radius: 9999px;
     background: var(--btn-bg);
     color: var(--btn-text);
-    padding: 0.85rem 1.5rem;
+    padding: 0.65rem 1.2rem;
+    font-size: 0.95rem;
     font-weight: 600;
     box-shadow: var(--btn-shadow);
     cursor: pointer;
@@ -273,16 +396,25 @@ body.dark-mode {
 }
 
 .hint {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--muted-text);
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
+}
+
+.hint.small-text {
+    margin-top: 0.75rem;
 }
 
 .field {
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
-    margin-bottom: 1rem;
+    gap: 0.4rem;
+    margin-bottom: 0.85rem;
+}
+
+.field.tight {
+    margin-bottom: 0.5rem;
+    gap: 0.35rem;
 }
 
 .field-label {
@@ -296,9 +428,10 @@ body.dark-mode {
 .textarea {
     background: var(--textarea-bg);
     border: 1px solid var(--textarea-border);
-    border-radius: 1rem;
-    padding: 0.85rem 1rem;
+    border-radius: 0.85rem;
+    padding: 0.65rem 0.85rem;
     color: var(--text-color);
+    font-size: 0.95rem;
 }
 
 textarea.textarea {
@@ -310,10 +443,17 @@ input[type="range"] {
     width: 100%;
 }
 
-.control-row {
-    display: flex;
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin: 1.25rem 0;
+}
+
+.control-grid.tight {
+    margin: 0.75rem 0;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .speed-control {
@@ -323,6 +463,20 @@ input[type="range"] {
 .stat-stack {
     display: grid;
     gap: 1.1rem;
+}
+
+.stat-stack.compact {
+    gap: 0.75rem;
+}
+
+.stat-stack.compact .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+}
+
+.stat-stack.compact .stat-value {
+    font-size: 0.9rem;
+    line-height: 1.3;
 }
 
 .stat-label {
@@ -354,6 +508,12 @@ input[type="range"] {
     padding: 0;
 }
 
+.pseudocode-panel.expanded .code-block {
+    max-height: 600px;
+    padding: 1.45rem;
+    font-size: 0.95rem;
+}
+
 .code-block {
     font-family: 'Courier New', monospace;
     background: var(--code-bg);
@@ -368,6 +528,7 @@ input[type="range"] {
     padding: 0.4rem 0.6rem;
     border-left: 3px solid transparent;
     transition: background 0.2s ease, border-color 0.2s ease;
+    line-height: 1.45;
 }
 
 .code-line.active {
@@ -382,6 +543,11 @@ input[type="range"] {
     border-radius: 1.5rem;
     background: var(--utility-bg);
     border: 1px dashed var(--panel-border);
+}
+
+.generator-block.tight {
+    margin-top: 1rem;
+    padding: 1.25rem;
 }
 
 .generator-header h3 {
@@ -408,7 +574,7 @@ input[type="range"] {
 
 .legend-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 0.85rem;
 }
 
@@ -487,8 +653,8 @@ input[type="range"] {
         padding: 1.5rem;
     }
 
-    .control-row {
-        flex-direction: column;
+    .control-grid {
+        grid-template-columns: 1fr;
     }
 
     .status-row {

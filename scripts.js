@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const stepExplanationEl = document.getElementById('stepExplanation');
     const mstStatsEl = document.getElementById('mstStats');
     const healthIndicatorEl = document.getElementById('healthIndicator');
+    const workspaceNarrationEl = document.getElementById('workspaceNarration');
     const heroNodeCount = document.getElementById('heroNodeCount');
     const heroEdgeCount = document.getElementById('heroEdgeCount');
     const heroWeight = document.getElementById('heroWeight');
@@ -424,6 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('autoBtn').disabled = false;
         document.getElementById('startBtn').disabled = true;
         setStatus(`Prim\'s initialized from node ${configuredStartNode.label}. Step through or auto run.`);
+        previewNextStep('Next: choose the starting node to seed the MST.');
         draw();
     }
 
@@ -435,6 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
             algorithmStep = 1;
             highlightCodeLine(1);
             setStepExplanation(`Selected starting node: ${currentNode.label}`);
+            previewNextStep(`Next: add ${currentNode.label} to the MST.`);
             draw();
             return true;
         }
@@ -445,6 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
             highlightCodeLine(2);
             setStepExplanation(`Added node ${currentNode.label} to MST. MST now has ${mstNodes.size} node(s).`);
             updateMSTStats();
+            previewNextStep('Next: check whether all nodes are already in the MST.');
             draw();
             return true;
         }
@@ -463,12 +467,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleMSTOnlyAvailability(true);
                 updateMSTStats();
                 refreshCandidateQueue();
+                previewNextStep('Process complete. No further steps.');
                 draw();
                 return false;
             }
             algorithmStep = 3;
             highlightCodeLine(3);
             setStepExplanation(`MST has ${mstNodes.size}/${nodes.length} nodes. Continuing loop.`);
+            previewNextStep('Next: gather candidate edges along the frontier.');
             draw();
             return true;
         }
@@ -488,6 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
             highlightCodeLine(6);
             setStepExplanation(`Found ${candidateEdges.length} candidate edge(s) spanning the frontier.`);
             refreshCandidateQueue();
+            previewNextStep('Next: choose the cheapest frontier edge.');
             draw();
             return true;
         }
@@ -499,6 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('stepBtn').disabled = true;
                 document.getElementById('autoBtn').disabled = true;
                 document.getElementById('autoBtn').textContent = 'Auto run';
+                previewNextStep('Cannot continue without connecting edges.');
                 return false;
             }
             let minEdge = candidateEdges[0];
@@ -515,6 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentNode = newNode;
             candidateEdges = [minEdge];
             refreshCandidateQueue();
+            previewNextStep(`Next: add node ${newNode.label} into the MST.`);
             draw();
             return true;
         }
@@ -525,6 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
             algorithmStep = 6;
             highlightCodeLine(8);
             setStepExplanation(`Added node ${newNode.label} to MST.`);
+            previewNextStep('Next: lock the selected edge into the MST.');
             draw();
             return true;
         }
@@ -537,6 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
             highlightCodeLine(9);
             setStepExplanation(`Edge committed. Total MST weight now ${totalMSTWeight}.`);
             updateMSTStats();
+            previewNextStep('Next: return to the loop condition.');
             draw();
             return true;
         }
@@ -547,6 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
             highlightCodeLine(10);
             setStepExplanation('Returning to loop condition check.');
             refreshCandidateQueue();
+            previewNextStep('Next: evaluate whether the MST is complete.');
             draw();
             return true;
         }
@@ -575,6 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('autoBtn').textContent = 'Auto run';
         document.getElementById('startBtn').disabled = false;
         setStepExplanation('Click "Start Prim\'s" to begin visualization.');
+        previewNextStep('Next: initialize Prim\'s when you press start.');
         updateMSTStats();
         refreshCandidateQueue();
         draw();
@@ -727,11 +740,42 @@ document.addEventListener('DOMContentLoaded', () => {
         mstViewToggle.textContent = 'Show MST only';
     }
 
+    let narrationState = {
+        prev: 'Previous step will appear here.',
+        current: 'Awaiting instructions...',
+        next: 'Next hint shows up here.'
+    };
+
+    updateNarrationDisplay();
+    function updateNarrationDisplay() {
+        if (!workspaceNarrationEl) return;
+        const prevEl = workspaceNarrationEl.querySelector('[data-role="prev"]');
+        const currentEl = workspaceNarrationEl.querySelector('[data-role="current"]');
+        const nextEl = workspaceNarrationEl.querySelector('[data-role="next"]');
+        if (prevEl) prevEl.textContent = narrationState.prev;
+        if (currentEl) currentEl.textContent = narrationState.current;
+        if (nextEl) nextEl.textContent = narrationState.next;
+    }
+
     function setStepExplanation(text) {
         if (stepExplanationEl) {
             stepExplanationEl.textContent = text;
         }
+        narrationState = {
+            prev: narrationState.current,
+            current: text,
+            next: narrationState.next
+        };
+        updateNarrationDisplay();
         logHistory(text);
+    }
+
+    function previewNextStep(text) {
+        narrationState = {
+            ...narrationState,
+            next: text
+        };
+        updateNarrationDisplay();
     }
 
     function logHistory(entry) {

@@ -50,93 +50,126 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-12 space-y-10">
-        <section class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] items-start">
-            <div class="panel">
+        <section class="space-y-8">
+            <div class="panel legend-panel">
                 <div class="panel-header">
                     <div>
-                        <p class="eyebrow">Workspace</p>
-                        <h2 class="section-title">Graph Builder &amp; Canvas</h2>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <button id="loadSampleBtn" class="btn">Load sample graph</button>
-                        <button id="clearBtn" class="btn btn-ghost">Clear all</button>
+                        <p class="eyebrow">Legend &amp; Modes</p>
+                        <h2 class="section-title">Visual cues</h2>
                     </div>
                 </div>
-                <canvas id="canvas" width="760" height="520" class="canvas"></canvas>
-                <div class="status-row">
-                    <p id="statusText" class="status-bar">Welcome! Build a graph or load the curated sample.</p>
-                    <button id="mstViewToggle" class="btn btn-ghost hidden" disabled>Show MST only</button>
+                <div class="legend-grid">
+                    <div class="legend-item"><span class="legend-dot regular"></span>Regular node</div>
+                    <div class="legend-item"><span class="legend-dot mst"></span>Node in MST</div>
+                    <div class="legend-item"><span class="legend-dot current"></span>Current frontier node</div>
+                    <div class="legend-item"><span class="legend-edge regular"></span>Regular edge</div>
+                    <div class="legend-item"><span class="legend-edge candidate"></span>Candidate edge</div>
+                    <div class="legend-item"><span class="legend-edge mst"></span>Edge committed to MST</div>
                 </div>
-                <div class="button-grid">
-                    <button id="addNodeBtn" class="btn w-full">Add node</button>
-                    <button id="addEdgeBtn" class="btn w-full">Add edge</button>
-                    <button id="deleteBtn" class="btn w-full">Delete mode</button>
-                </div>
-                <div class="generator-block">
-                    <div class="generator-header">
-                        <h3>Random graph forge</h3>
-                        <p>Create up to 50 nodes instantly.</p>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <label class="field grow">
-                            <span class="field-label">Node count</span>
-                            <input type="range" id="randomNodeCount" min="3" max="50" value="12">
-                            <span id="randomNodeCountLabel" class="hint">12 nodes</span>
-                        </label>
-                        <label class="field grow">
-                            <span class="field-label">Density</span>
-                            <input type="range" id="randomDensity" min="0.2" max="1" step="0.1" value="0.5">
-                            <span id="randomDensityLabel" class="hint">50% of possible edges</span>
-                        </label>
-                    </div>
-                    <button id="randomBtn" class="btn w-full mt-3">Generate random graph</button>
-                    <p class="hint">Connected graphs are guaranteed. Use this for quick experiments.</p>
-                </div>
-                <p class="hint">In view mode you can drag nodes to rearrange layouts and double-click any node to rename it. Add edge mode now uses an inline prompt for weights.</p>
+                <p class="hint mt-4">Delete mode removes a node and all connected edges. Use undo-friendly export/import to preserve interesting states.</p>
             </div>
 
-            <div class="flex flex-col gap-6">
-                <div class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <p class="eyebrow">Cockpit</p>
-                            <h2 class="section-title">Algorithm Controls</h2>
+            <div class="workspace-grid">
+                <div class="workspace-column">
+                    <div class="panel workspace-panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="eyebrow">Workspace</p>
+                                <h2 class="section-title">Graph Builder &amp; Canvas</h2>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button id="loadSampleBtn" class="btn">Load sample graph</button>
+                                <button id="clearBtn" class="btn btn-ghost">Clear all</button>
+                            </div>
+                        </div>
+                        <div class="workspace-shell">
+                            <div class="canvas-stack">
+                                <canvas id="canvas" width="760" height="520" class="canvas"></canvas>
+                                <div class="status-row">
+                                    <div class="status-bar stack">
+                                        <p id="statusText" class="status-line primary">Welcome! Build a graph or load the curated sample.</p>
+                                        <div id="workspaceNarration" class="workspace-narration">
+                                            <p class="status-line faint" data-role="prev">Previous step will appear here.</p>
+                                            <p class="status-line focus" data-role="current">Awaiting instructions...</p>
+                                            <p class="status-line faint" data-role="next">Next hint shows up here.</p>
+                                        </div>
+                                    </div>
+                                    <button id="mstViewToggle" class="btn btn-ghost hidden" disabled>Show MST only</button>
+                                </div>
+                            </div>
+                            <div class="cockpit-card">
+                                <div>
+                                    <p class="eyebrow">Cockpit</p>
+                                    <h3 class="mini-title">Algorithm controls</h3>
+                                </div>
+                                <label class="field tight">
+                                    <span class="field-label">Start node</span>
+                                    <select id="startNodeSelect" class="select"></select>
+                                </label>
+                                <div class="control-grid tight">
+                                    <button id="startBtn" class="btn flex-1">Start</button>
+                                    <button id="stepBtn" class="btn flex-1" disabled>Step</button>
+                                    <button id="autoBtn" class="btn flex-1" disabled>Auto</button>
+                                    <button id="resetBtn" class="btn flex-1 btn-ghost">Reset</button>
+                                </div>
+                                <label class="field tight">
+                                    <span class="field-label">Animation speed</span>
+                                    <input type="range" id="speedSlider" min="20" max="2000" value="600">
+                                    <span id="speedLabel" class="hint">600ms</span>
+                                </label>
+                                <div class="stat-stack compact">
+                                    <div>
+                                        <p class="stat-label">Current step</p>
+                                        <p id="stepExplanation" class="stat-value">Click start to begin.</p>
+                                    </div>
+                                    <div>
+                                        <p class="stat-label">MST snapshot</p>
+                                        <p id="mstStats" class="stat-value">Weight 0 · Edges 0 · Nodes 0/0</p>
+                                    </div>
+                                    <div>
+                                        <p class="stat-label">Graph health</p>
+                                        <p id="healthIndicator" class="stat-value">No nodes yet.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <label class="field">
-                        <span class="field-label">Start node</span>
-                        <select id="startNodeSelect" class="select"></select>
-                        <span class="hint">Pick any node before starting. You can change this and rerun instantly.</span>
-                    </label>
-                    <div class="control-row">
-                        <button id="startBtn" class="btn flex-1">Start Prim's</button>
-                        <button id="stepBtn" class="btn flex-1" disabled>Next step</button>
-                    </div>
-                    <div class="control-row">
-                        <button id="autoBtn" class="btn flex-1" disabled>Auto run</button>
-                        <button id="resetBtn" class="btn flex-1 btn-ghost">Reset</button>
-                    </div>
-                    <div class="speed-control">
-                        <label for="speedSlider" class="field-label">Animation speed</label>
-                        <input type="range" id="speedSlider" min="20" max="2000" value="600">
-                        <p id="speedLabel" class="hint">600ms</p>
-                    </div>
-                    <div class="stat-stack">
-                        <div>
-                            <p class="stat-label">Current step</p>
-                            <p id="stepExplanation" class="stat-value">Click "Start Prim's" to begin visualization.</p>
+                    <div class="panel builder-panel compact">
+                        <div class="panel-header">
+                            <div>
+                                <p class="eyebrow">Graph builder</p>
+                                <h2 class="section-title">Actions</h2>
+                            </div>
                         </div>
-                        <div>
-                            <p class="stat-label">MST snapshot</p>
-                            <p id="mstStats" class="stat-value">Total Weight: 0 | Edges: 0 | Nodes in MST: 0/0</p>
+                        <div class="button-grid small">
+                            <button id="addNodeBtn" class="btn w-full">Add node</button>
+                            <button id="addEdgeBtn" class="btn w-full">Add edge</button>
+                            <button id="deleteBtn" class="btn w-full">Delete</button>
                         </div>
-                        <div>
-                            <p class="stat-label">Graph health</p>
-                            <p id="healthIndicator" class="stat-value">No nodes yet.</p>
+                        <div class="generator-block tight">
+                            <div class="generator-header">
+                                <h3>Random graph forge</h3>
+                                <p>Create up to 50 nodes instantly.</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <label class="field grow tight">
+                                    <span class="field-label">Node count</span>
+                                    <input type="range" id="randomNodeCount" min="3" max="50" value="12">
+                                    <span id="randomNodeCountLabel" class="hint">12 nodes</span>
+                                </label>
+                                <label class="field grow tight">
+                                    <span class="field-label">Density</span>
+                                    <input type="range" id="randomDensity" min="0.2" max="1" step="0.1" value="0.5">
+                                    <span id="randomDensityLabel" class="hint">50% of edges</span>
+                                </label>
+                            </div>
+                            <button id="randomBtn" class="btn w-full mt-2">Generate</button>
+                            <p class="hint">Connected graphs are guaranteed.</p>
                         </div>
+                        <p class="hint small-text">Drag nodes to rearrange layouts. Double-click to rename. Add edge mode now uses an inline prompt for weights.</p>
                     </div>
                 </div>
-                <div class="panel pseudocode-panel">
+                <div class="panel pseudocode-panel expanded">
                     <div class="panel-header">
                         <div>
                             <p class="eyebrow">Trace</p>
@@ -161,24 +194,6 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <p class="eyebrow">Legend &amp; Modes</p>
-                    <h2 class="section-title">Visual cues</h2>
-                </div>
-            </div>
-            <div class="legend-grid">
-                <div class="legend-item"><span class="legend-dot regular"></span>Regular node</div>
-                <div class="legend-item"><span class="legend-dot mst"></span>Node in MST</div>
-                <div class="legend-item"><span class="legend-dot current"></span>Current frontier node</div>
-                <div class="legend-item"><span class="legend-edge regular"></span>Regular edge</div>
-                <div class="legend-item"><span class="legend-edge candidate"></span>Candidate edge</div>
-                <div class="legend-item"><span class="legend-edge mst"></span>Edge committed to MST</div>
-            </div>
-            <p class="hint mt-4">Delete mode removes a node and all connected edges. Use undo-friendly export/import to preserve interesting states.</p>
         </section>
 
         <section class="panel">
