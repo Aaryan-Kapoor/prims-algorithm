@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prim's Algorithm Interactive Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <header class="hero">
+        <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+            <div class="space-y-4">
+                <p class="eyebrow">Prim's Lab</p>
+                <h1 class="text-4xl lg:text-5xl font-bold">Prim's Algorithm Interactive Studio</h1>
+                <p class="text-lg text-slate-200 max-w-2xl">
+                    Design weighted graphs, drag nodes into place, generate random topologies, import and export JSON,
+                    and watch Prim's algorithm operate with live data-structure readouts and code highlighting.
+                </p>
+                <div class="flex flex-wrap gap-3 text-sm text-slate-300">
+                    <span class="pill">Drag friendly canvas</span>
+                    <span class="pill">Custom start node</span>
+                    <span class="pill">Random graph forge</span>
+                    <span class="pill">Priority queue view</span>
+                    <span class="pill">Step history log</span>
+                </div>
+            </div>
+            <div class="hero-card">
+                <h2 class="text-xl font-semibold mb-4">Live Telemetry</h2>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex justify-between"><span>Nodes on canvas</span><span id="heroNodeCount">0</span></li>
+                    <li class="flex justify-between"><span>Edges defined</span><span id="heroEdgeCount">0</span></li>
+                    <li class="flex justify-between"><span>MST weight</span><span id="heroWeight">0</span></li>
+                    <li class="flex justify-between"><span>Status</span><span id="heroStatus">Awaiting graph...</span></li>
+                </ul>
+                <p class="text-xs text-slate-400 mt-4">Tip: Build or load a graph, pick a starting node, then step through Prim's decisions.</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12 space-y-10">
+        <section class="grid gap-6 lg:grid-cols-[1.8fr_1fr]">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Workspace</p>
+                        <h2 class="section-title">Graph Builder &amp; Canvas</h2>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button id="loadSampleBtn" class="btn">Load sample graph</button>
+                        <button id="clearBtn" class="btn btn-ghost">Clear all</button>
+                    </div>
+                </div>
+                <canvas id="canvas" width="760" height="520" class="canvas"></canvas>
+                <p id="statusText" class="status-bar">Welcome! Build a graph or load the curated sample.</p>
+                <div class="button-grid">
+                    <button id="addNodeBtn" class="btn w-full">Add node</button>
+                    <button id="addEdgeBtn" class="btn w-full">Add edge</button>
+                    <button id="deleteBtn" class="btn w-full">Delete mode</button>
+                </div>
+                <p class="hint">In view mode you can drag nodes to rearrange layouts and double-click any node to rename it. Add edge mode now uses an inline prompt for weights.</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Cockpit</p>
+                        <h2 class="section-title">Algorithm Controls</h2>
+                    </div>
+                </div>
+                <label class="field">
+                    <span class="field-label">Start node</span>
+                    <select id="startNodeSelect" class="select"></select>
+                    <span class="hint">Pick any node before starting. You can change this and rerun instantly.</span>
+                </label>
+                <div class="control-row">
+                    <button id="startBtn" class="btn flex-1">Start Prim's</button>
+                    <button id="stepBtn" class="btn flex-1" disabled>Next step</button>
+                </div>
+                <div class="control-row">
+                    <button id="autoBtn" class="btn flex-1" disabled>Auto run</button>
+                    <button id="resetBtn" class="btn flex-1 btn-ghost">Reset</button>
+                </div>
+                <div class="speed-control">
+                    <label for="speedSlider" class="field-label">Animation speed</label>
+                    <input type="range" id="speedSlider" min="120" max="2000" value="900">
+                    <p id="speedLabel" class="hint">900ms</p>
+                </div>
+                <div class="stat-stack">
+                    <div>
+                        <p class="stat-label">Current step</p>
+                        <p id="stepExplanation" class="stat-value">Click "Start Prim's" to begin visualization.</p>
+                    </div>
+                    <div>
+                        <p class="stat-label">MST snapshot</p>
+                        <p id="mstStats" class="stat-value">Total Weight: 0 | Edges: 0 | Nodes in MST: 0/0</p>
+                    </div>
+                    <div>
+                        <p class="stat-label">Graph health</p>
+                        <p id="healthIndicator" class="stat-value">No nodes yet.</p>
+                    </div>
+                </div>
+                <div class="pseudocode">
+                    <h3 class="text-lg font-semibold mb-3">Pseudocode Trace</h3>
+                    <div class="code-block">
+                        <div class="code-line" data-step="0">1. Initialize MST as empty</div>
+                        <div class="code-line" data-step="1">2. Select starting node</div>
+                        <div class="code-line" data-step="2">3. Add starting node to MST</div>
+                        <div class="code-line" data-step="3">4. WHILE MST has fewer than N nodes:</div>
+                        <div class="code-line" data-step="4">&nbsp;&nbsp;&nbsp;5. Find minimum edge (u,v,w)</div>
+                        <div class="code-line" data-step="5">&nbsp;&nbsp;&nbsp;6. WHERE u is in MST</div>
+                        <div class="code-line" data-step="6">&nbsp;&nbsp;&nbsp;7. AND v is NOT in MST</div>
+                        <div class="code-line" data-step="7">&nbsp;&nbsp;&nbsp;8. Add v to MST</div>
+                        <div class="code-line" data-step="8">&nbsp;&nbsp;&nbsp;9. Add edge (u,v) to MST</div>
+                        <div class="code-line" data-step="9">&nbsp;&nbsp;&nbsp;10. Update total weight</div>
+                        <div class="code-line" data-step="10">11. END WHILE</div>
+                        <div class="code-line" data-step="11">12. MST is complete!</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid gap-6 lg:grid-cols-2">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Utility deck</p>
+                        <h2 class="section-title">Generation &amp; Data I/O</h2>
+                    </div>
+                </div>
+                <div class="utility-block">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <label class="field grow">
+                            <span class="field-label">Node count</span>
+                            <input type="range" id="randomNodeCount" min="3" max="12" value="8">
+                            <span id="randomNodeCountLabel" class="hint">8 nodes</span>
+                        </label>
+                        <label class="field grow">
+                            <span class="field-label">Density</span>
+                            <input type="range" id="randomDensity" min="0.2" max="1" step="0.1" value="0.5">
+                            <span id="randomDensityLabel" class="hint">50% of possible edges</span>
+                        </label>
+                    </div>
+                    <button id="randomBtn" class="btn w-full mt-3">Generate random graph</button>
+                    <p class="hint">Connected graphs are guaranteed. Use this for quick experiments.</p>
+                </div>
+                <div class="utility-block">
+                    <h3 class="text-lg font-semibold">Import / Export graph JSON</h3>
+                    <textarea id="graphData" class="textarea" rows="6" placeholder='{"nodes":[],"edges":[]}'></textarea>
+                    <div class="button-grid mt-3">
+                        <button id="exportBtn" class="btn w-full">Export</button>
+                        <button id="copyExportBtn" class="btn w-full btn-ghost">Copy JSON</button>
+                        <button id="importBtn" class="btn w-full">Import</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Legend &amp; Modes</p>
+                        <h2 class="section-title">Visual cues</h2>
+                    </div>
+                </div>
+                <div class="legend-grid">
+                    <div class="legend-item"><span class="legend-dot regular"></span>Regular node</div>
+                    <div class="legend-item"><span class="legend-dot mst"></span>Node in MST</div>
+                    <div class="legend-item"><span class="legend-dot current"></span>Current frontier node</div>
+                    <div class="legend-item"><span class="legend-edge regular"></span>Regular edge</div>
+                    <div class="legend-item"><span class="legend-edge candidate"></span>Candidate edge</div>
+                    <div class="legend-item"><span class="legend-edge mst"></span>Edge committed to MST</div>
+                </div>
+                <p class="hint mt-4">Delete mode removes a node and all connected edges. Use undo-friendly export/import to preserve interesting states.</p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <p class="eyebrow">Live diagnostics</p>
+                    <h2 class="section-title">Data structure readouts</h2>
+                </div>
+            </div>
+            <div class="insight-grid">
+                <div>
+                    <h3 class="insight-title">Adjacency list</h3>
+                    <ul id="adjacencyList" class="data-list"></ul>
+                </div>
+                <div>
+                    <h3 class="insight-title">MST edges</h3>
+                    <ul id="mstEdgeList" class="data-list"></ul>
+                </div>
+                <div>
+                    <h3 class="insight-title">Priority queue view</h3>
+                    <ul id="candidateList" class="data-list"></ul>
+                </div>
+            </div>
+            <div class="history-block">
+                <h3 class="insight-title">Step history</h3>
+                <ul id="historyList" class="history-list"></ul>
+            </div>
+        </section>
+    </main>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,22 +1,34 @@
-# Prim's Algorithm Learning Resource
+# Prim's Algorithm Interactive Studio
 
-This project is a learning tool designed to help students understand Prim's algorithm for finding a Minimum Spanning Tree in a weighted graph. It includes a clear introduction to the problem Prim's algorithm solves, an overview of how the algorithm works, and an interactive visual demonstration that lets learners watch each step in action.
+This repository hosts a single-page application dedicated to a "state-of-the-art" Prim's algorithm playground. Instead of a lec
+cture outline, the entire experience now revolves around experimentation: design graphs, generate random networks, import or e
+xport JSON, and watch Prim's algorithm execute with live data-structure readouts.
 
-## What This Is
+## Feature Highlights
+- **Drag-friendly canvas builder** – add, delete, rename (double-click), and reposition nodes, then wire up weighted edges with quick prompts.
+- **Smart start-node selection** – choose any vertex from a dropdown before running Prim's algorithm and rerun instantly.
+- **Live algorithm cockpit** – start/step/auto-run controls, adjustable animation speeds, code-line highlighting, and MST hea
+lth indicators.
+- **Random graph forge** – parameterized node count and density sliders guarantee connected graphs for rapid exploration.
+- **Import/export workflow** – serialize the current graph to JSON, copy it to the clipboard, and re-import saved scenarios.
+- **Data-structure telemetry** – adjacency lists, candidate (priority queue) snapshots, MST edge ledgers, and a scrolling ste
+p history all update in real time.
 
-- A short lecture that explains the purpose of Minimum Spanning Trees and the intuition behind Prim's algorithm.
-- A breakdown of the algorithm in plain language, focusing on how it builds a tree one edge at a time.
-- A walkthrough of a sample graph to show how the algorithm chooses edges based on minimal weight.
-- An interactive visual tool that lets learners build graphs, load sample graphs, and step through Prim's algorithm to see how the tree grows.
+## Project Structure
+```
+./index.html   # Main UI shell, layout, and Tailwind utility classes
+./styles.css   # Custom theming, panels, and helper classes
+./scripts.js   # Canvas interactions, Prim's algorithm state machine, and utilities
+```
 
-## What Prim's Algorithm Does
+## Running the Studio Locally
+1. Use any static HTTP server. Python's built-in server works without additional dependencies.
+2. From the repository root run:
+   ```bash
+   python -m http.server 8000
+   ```
+3. Visit `http://localhost:8000` in your browser. The hero panel will reflect your current graph statistics, and the workspac
+e panel contains all of the controls described above.
 
-Prim's algorithm finds a Minimum Spanning Tree by starting from any single node and repeatedly attaching the lowest weight edge that connects a new node to the growing tree. It continues selecting the lightest edge that expands the tree until every node has been included.
-
-This approach ensures that the total weight of all chosen edges is as small as possible while still connecting all vertices. It is a greedy method because it always takes the currently cheapest valid option, and it is guaranteed to produce an optimal spanning tree for any connected weighted graph.
-
-## Why This Matters
-
-Minimum Spanning Trees appear in many real world settings, such as network design, clustering, layout optimization, and reducing the cost of connecting multiple locations. Understanding Prim's algorithm helps students build intuition about greedy strategies and how they can lead to optimal solutions in certain structured problems.
-
-This project provides an accessible way to learn these ideas by combining explanation, examples, and hands-on interaction.
+Because everything is static and Tailwind is loaded via CDN, you can deploy this folder to any static host (GitHub Pages, Netli
+fy, Render, etc.) without additional build steps.
