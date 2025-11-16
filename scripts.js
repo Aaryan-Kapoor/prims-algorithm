@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let totalMSTWeight = 0;
     let autoRunInterval = null;
     let historyLog = [];
+    let mstViewOnly = false;
 
     const statusText = document.getElementById('statusText');
     const stepExplanationEl = document.getElementById('stepExplanation');
@@ -34,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroEdgeCount = document.getElementById('heroEdgeCount');
     const heroWeight = document.getElementById('heroWeight');
     const heroStatus = document.getElementById('heroStatus');
+    const mstViewToggle = document.getElementById('mstViewToggle');
+    const themeToggle = document.getElementById('themeToggle');
 
     class Node {
         constructor(x, y, id, label) {
@@ -132,11 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        edges.forEach(edge => {
+        const edgesToRender = mstViewOnly ? mstEdges : edges;
+        edgesToRender.forEach(edge => {
             let state = 'normal';
             if (mstEdges.includes(edge)) {
                 state = 'mst';
-            } else if (candidateEdges.includes(edge)) {
+            } else if (!mstViewOnly && candidateEdges.includes(edge)) {
                 state = 'candidate';
             }
             edge.draw(ctx, state);
@@ -266,9 +270,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getCanvasCoordinates(e) {
         const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
         return {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top) * scaleY
         };
     }
 
@@ -454,6 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('stepBtn').disabled = true;
                 document.getElementById('autoBtn').disabled = true;
                 document.getElementById('autoBtn').textContent = 'Auto run';
+                toggleMSTOnlyAvailability(true);
                 updateMSTStats();
                 refreshCandidateQueue();
                 draw();
@@ -712,6 +719,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function toggleMSTOnlyAvailability(available) {
+        if (!mstViewToggle) return;
+        mstViewOnly = false;
+        mstViewToggle.classList.toggle('hidden', !available);
+        mstViewToggle.disabled = !available;
+        mstViewToggle.textContent = 'Show MST only';
+    }
+
     function setStepExplanation(text) {
         if (stepExplanationEl) {
             stepExplanationEl.textContent = text;
@@ -933,6 +948,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const lines = document.querySelectorAll(`.code-line[data-step="${step}"]`);
         lines.forEach(line => line.classList.add('active'));
+    }
+
+    if (mstViewToggle) {
+        mstViewToggle.addEventListener('click', () => {
+            mstViewOnly = !mstViewOnly;
+            mstViewToggle.textContent = mstViewOnly ? 'Show all edges' : 'Show MST only';
+            draw();
+        });
+        toggleMSTOnlyAvailability(false);
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Light mode' : 'Dark mode';
+        });
+        themeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Light mode' : 'Dark mode';
+    }
+
+    const randomNodeSlider = document.getElementById('randomNodeCount');
+    if (randomNodeSlider) {
+        const label = document.getElementById('randomNodeCountLabel');
+        label.textContent = `${randomNodeSlider.value} nodes`;
+    }
+    const randomDensitySlider = document.getElementById('randomDensity');
+    if (randomDensitySlider) {
+        const label = document.getElementById('randomDensityLabel');
+        const pct = Math.round(parseFloat(randomDensitySlider.value) * 100);
+        label.textContent = `${pct}% of possible edges`;
+    }
+    const speedSlider = document.getElementById('speedSlider');
+    if (speedSlider) {
+        document.getElementById('speedLabel').textContent = `${speedSlider.value}ms`;
     }
 
     setStatus('Welcome! Load the sample graph or start drawing.');
