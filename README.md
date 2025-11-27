@@ -4,6 +4,8 @@ This repository hosts a single-page application dedicated to a "state-of-the-art
 cture outline, the entire experience now revolves around experimentation: design graphs, generate random networks, import or e
 xport JSON, and watch Prim's algorithm execute with live data-structure readouts.
 
+## I made this for my math class :)
+
 ## Feature Highlights
 - **Drag-friendly canvas builder** – add, delete, rename (double-click), and reposition nodes, then wire up weighted edges with quick prompts.
 - **Smart start-node selection** – choose any vertex from a dropdown before running Prim's algorithm and rerun instantly.
