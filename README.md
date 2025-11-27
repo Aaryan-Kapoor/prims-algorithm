@@ -1,8 +1,9 @@
 # Prim's Algorithm Interactive Studio
 
 This repository hosts a single-page application dedicated to a "state-of-the-art" Prim's algorithm playground. Instead of a lec
-cture outline, the entire experience now revolves around experimentation: design graphs, generate random networks, import or e
-xport JSON, and watch Prim's algorithm execute with live data-structure readouts.
+cture outline, the entire experience now revolves around experimentation: design graphs, generate random networks, import or export JSON, and watch Prim's algorithm execute with live data-structure readouts.
+
+<img width="2322" height="1368" alt="image" src="https://github.com/user-attachments/assets/d10d4440-bb82-4547-a963-7532565a5f06" />
 
 ## I made this for my math class :)
 
